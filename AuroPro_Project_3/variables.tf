@@ -73,7 +73,7 @@ variable "environments" {
       avail_zone = "ap-south-1a"
       instance_type = "t2.micro"
       ami_id = "ami-02e94b011299ef128"
-      instance_name = "my-first-instance"
+      # instance_name = "my-first-instance"
       # private_key_path = "/root/.ssh/id_rsa"
       # public_key_path = "/root/.ssh/id_rsa.pub"
     },
@@ -88,7 +88,7 @@ variable "environments" {
       avail_zone = "ap-south-1a"
       instance_type = "t2.micro"
       ami_id = "ami-02e94b011299ef128"
-      instance_name = "my-second-instance"
+      # instance_name = "my-second-instance"
       # private_key_path = "/root/.ssh/id_rsa"
       # public_key_path = "/root/.ssh/id_rsa.pub"
     }

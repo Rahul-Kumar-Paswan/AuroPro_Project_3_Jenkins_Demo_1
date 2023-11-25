@@ -83,6 +83,11 @@ pipeline {
       steps {
         script {
           dir('AuroPro_Project_3'){
+            sh "pwd"
+            sh "ls"
+            withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
+              sh "cp ${TFVARS_FILE} terraform.tfvars"
+            }
             // Write private key to a file
             sh "echo \"${TERRAFORM_PRIVATE_KEY}\" > private_key_id_rsa"
             
