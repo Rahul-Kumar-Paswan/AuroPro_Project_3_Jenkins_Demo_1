@@ -1,3 +1,4 @@
+.gitignore
 __pycache__
 .venv
 flask_app.egg-info
@@ -21,7 +22,7 @@ AuroPro_Project_3/*.tfstate.*
 # control as they are data points which are potentially sensitive and subject 
 # to change depending on the environment.
 
-AuroPro_Project_3/*.tfvars
+AuroPro_Project_3/terraform.tfvars
 
 # Ignore CLI configuration files
 AuroPro_Project_3/.terraformrc
