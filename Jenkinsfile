@@ -83,6 +83,7 @@ pipeline {
       steps {
         script {
           dir('AuroPro_Project_3'){
+            echo "Stage 3 Provision Server"
             sh "pwd"
             sh "ls"
             withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
