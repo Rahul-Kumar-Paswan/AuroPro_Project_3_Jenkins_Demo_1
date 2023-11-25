@@ -24,6 +24,7 @@ AuroPro_Project_3/*.tfstate.*
 AuroPro_Project_3/.terraform/
 
 # Exclude specific .tfvars files
+*.tfvars
 AuroPro_Project_3/*.tfvars
 AuroPro_Project_3/terraform.tfvars
 
