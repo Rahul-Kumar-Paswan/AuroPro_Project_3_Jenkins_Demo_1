@@ -85,8 +85,7 @@ pipeline {
           dir('AuroPro_Project_3'){
             // Write private key to a file
             sh "echo \"${TERRAFORM_PRIVATE_KEY}\" > private_key_id_rsa"
-            sh "pwd"
-            sh "ls"
+            
             sh "ls -l private_key_id_rsa"
             sh "cat private_key_id_rsa"
 
