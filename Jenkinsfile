@@ -124,7 +124,7 @@ pipeline {
 
     stage('Deploy with Docker Compose and Groovy') {
       environment {
-        IMAGE_NAME_1 = "rahulkumarpaswan/auropro_project_3:${IMAGE_NAME}".toLowerCase()
+        IMAGE_NAME_1 = "rahulkumarpaswan/auropro_project_3:${IMAGE_NAME}"
         RDS_DB_ENDPOINT = "${RDS_ENDPOINT}"
         RDS_DB_USERNAME = "${DB_USERNAME}"
         RDS_DB_PASSWORD = "${DB_PASSWORD}"
@@ -151,6 +151,7 @@ pipeline {
           sleep(time: 90, unit: "SECONDS")
 
           def shellCmd = "bash ./server-cmds.sh RDS_ENDPOINT=${RDS_DB_ENDPOINT} DB_USERNAME=${RDS_DB_USERNAME} DB_PASSWORD=${RDS_DB_PASSWORD} DB_NAME=${RDS_DB_NAME} IMAGE_NAME=${IMAGE_NAME_1}"
+          sh "chmod +x server-cmds.sh"
           sh "scp -o StrictHostKeyChecking=no -i ${privateKeyPath} server-cmds.sh ${ec2Instance}:/home/ec2-user"
           // sh "scp -o StrictHostKeyChecking=no -i ${privateKeyPath} docker-compose.yaml ${ec2Instance}:/home/ec2-user"
 
