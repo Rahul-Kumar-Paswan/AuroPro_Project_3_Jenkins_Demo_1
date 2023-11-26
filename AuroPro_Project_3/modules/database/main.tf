@@ -18,6 +18,7 @@ resource "aws_db_instance" "my_db_instance" {
   instance_class          = var.db_instance_class
   username                = var.db_username
   password                = var.db_password
+  db_name                 = var.db_name
   publicly_accessible     = false
   multi_az                = var.db_multi_az
   backup_retention_period = var.db_backup_retention_period
