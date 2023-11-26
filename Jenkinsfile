@@ -91,6 +91,7 @@ pipeline {
             }
             // Write private key to a file
             sh "echo \"${TERRAFORM_PRIVATE_KEY}\" > private_key_id_rsa"
+            sh "chmod 644 terraform.tfvars"
             sh "cat terraform.tfvars"
             
             sh "ls -l private_key_id_rsa"
