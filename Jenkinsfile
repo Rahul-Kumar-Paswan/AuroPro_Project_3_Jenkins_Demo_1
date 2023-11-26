@@ -65,9 +65,9 @@ pipeline {
       steps {
         echo "Stage 2 Building Image"
         sh "ls -l /var/run/docker.sock"
-        buildImage "auropro_project_3:${IMAGE_NAME}"
-        dockerLogin()
-        dockerPush "auropro_project_3:${IMAGE_NAME}"
+        // buildImage "auropro_project_3:${IMAGE_NAME}"
+        // dockerLogin()
+        // dockerPush "auropro_project_3:${IMAGE_NAME}"
       }
     }
 
@@ -85,12 +85,13 @@ pipeline {
           dir('AuroPro_Project_3'){
             echo "Stage 3 Provision Server"
             sh "pwd"
-            sh "ls"
+            sh "ls -l"
             withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
               sh "cp ${TFVARS_FILE} terraform.tfvars"
             }
             // Write private key to a file
             sh "echo \"${TERRAFORM_PRIVATE_KEY}\" > private_key_id_rsa"
+            sh "cat terraform.tfvars"
             
             sh "ls -l private_key_id_rsa"
             sh "cat private_key_id_rsa"
@@ -132,42 +133,6 @@ pipeline {
           sh "pwd"
           sh "ls"
           sh "cat AuroPro_Project_3/private_key.pem"
-        }
-      }
-    }
-
-    stage('Deploy with Docker Compose and Groovy') {
-      environment {
-        IMAGE_NAME_1 = "auropro_project_3:${IMAGE_NAME}"
-      }
-      steps {
-        script {
-          echo "Deploy to EC2 ........" 
-          echo "${IMAGE_NAME_1}"
-
-          def ec2Instance = "ec2-user@${EC2_PUBLIC_IP}"
-          def privateKeyPath = "${WORKSPACE}/AuroPro_Project_3/private_key.pem"
-
-          sh "chmod 600 ${privateKeyPath}"
-          sh "ls -l ${privateKeyPath}"
-
-          sh "cat ${privateKeyPath}"
-          sh "pwd"
-          sh "ls"
-          echo "waiting for EC2 server to initialize"
-          sleep(time: 90, unit: "SECONDS")
-
-          def shellCmd = "bash ./server-cmds.sh ${IMAGE_NAME_1}"
-          sh "scp -o StrictHostKeyChecking=no -i ${privateKeyPath} server-cmds.sh ${ec2Instance}:/home/ec2-user"
-          sh "scp -o StrictHostKeyChecking=no -i ${privateKeyPath} docker-compose.yaml ${ec2Instance}:/home/ec2-user"
-
-          echo "Contents of the remote directory:"
-          // Print contents of the remote directory
-          sh "ssh -o StrictHostKeyChecking=no -i ${privateKeyPath} ${ec2Instance} 'ls -l /home/ec2-user'"
-
-          sh "ssh -o StrictHostKeyChecking=no -i ${privateKeyPath} ${ec2Instance} ${shellCmd}"
-
-          // deployApp "auropro_project_3:${IMAGE_NAME}"
         }
       }
     }
