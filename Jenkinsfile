@@ -1,150 +1,150 @@
-#!/usr/bin/env groovy
+// #!/usr/bin/env groovy
 
-library identifier : 'jenkins-shared-library@main',retriever:modernSCM([
-    $class:'GitSCMSource',
-    remote:'https://github.com/Rahul-Kumar-Paswan/flask-shared-lib.git',
-    credentialsId:'git-credentials'
-])
+// library identifier : 'jenkins-shared-library@main',retriever:modernSCM([
+//     $class:'GitSCMSource',
+//     remote:'https://github.com/Rahul-Kumar-Paswan/flask-shared-lib.git',
+//     credentialsId:'git-credentials'
+// ])
 
-pipeline {
-  agent any
+// pipeline {
+//   agent any
   
-  stages{
+//   stages{
 
-    stage('Increment Version') {
-      steps {
-        script {
-          echo " hello dear"
-          def currentVersion = sh(
-            script: "python3 -c \"import re; match = re.search(r'version=\\\\'(.*?)\\\\'', open('setup.py').read()); print(match.group(1) if match else '143')\"",
-              returnStdout: true
-              ).trim()
+//     stage('Increment Version') {
+//       steps {
+//         script {
+//           echo " hello dear"
+//           def currentVersion = sh(
+//             script: "python3 -c \"import re; match = re.search(r'version=\\\\'(.*?)\\\\'', open('setup.py').read()); print(match.group(1) if match else '143')\"",
+//               returnStdout: true
+//               ).trim()
 
-          echo "Previous Version: ${currentVersion}"
-          // Split the version into major, minor, and patch parts
-          def versionParts = currentVersion.split('\\.')
+//           echo "Previous Version: ${currentVersion}"
+//           // Split the version into major, minor, and patch parts
+//           def versionParts = currentVersion.split('\\.')
 
-          // Access the version parts using index
-          def major = versionParts[0]
-          def minor = versionParts[1]
-          def patch = versionParts[2]
+//           // Access the version parts using index
+//           def major = versionParts[0]
+//           def minor = versionParts[1]
+//           def patch = versionParts[2]
 
-          echo "Current Version: ${currentVersion}"
-          echo "Major: ${major}"
-          echo "Minor: ${minor}"
-          echo "Patch: ${patch}"
-          echo "old versionParts : ${versionParts}"
+//           echo "Current Version: ${currentVersion}"
+//           echo "Major: ${major}"
+//           echo "Minor: ${minor}"
+//           echo "Patch: ${patch}"
+//           echo "old versionParts : ${versionParts}"
                     
-          // Increment the patch part
-          versionParts[-1] = String.valueOf(versionParts[-1].toInteger() + 1)
-          echo "new versionParts : ${versionParts}"
+//           // Increment the patch part
+//           versionParts[-1] = String.valueOf(versionParts[-1].toInteger() + 1)
+//           echo "new versionParts : ${versionParts}"
                     
-          // Join the version parts back together
-          def newVersion = versionParts.join('.')
-          echo "newVersion : ${newVersion}"
+//           // Join the version parts back together
+//           def newVersion = versionParts.join('.')
+//           echo "newVersion : ${newVersion}"
                     
-          // Update the setup.py file with the new version
-          sh "sed -i \"s/version='${currentVersion}'/version='${newVersion}'/\" setup.py"
+//           // Update the setup.py file with the new version
+//           sh "sed -i \"s/version='${currentVersion}'/version='${newVersion}'/\" setup.py"
 
-          echo "New Version: ${newVersion}"
-          env.IMAGE_NAME = "$newVersion-$BUILD_NUMBER"
-          echo "New IMAGE_NAME: ${IMAGE_NAME}"
-        }
-      }
-    }
+//           echo "New Version: ${newVersion}"
+//           env.IMAGE_NAME = "$newVersion-$BUILD_NUMBER"
+//           echo "New IMAGE_NAME: ${IMAGE_NAME}"
+//         }
+//       }
+//     }
 
-    stage('Clean Build Artifacts') {
-      steps {
-        echo "Stage 1 Cleaning and Building Artifacts"
-        sh 'rm -rf build/ dist/ *.egg-info/'
-        sh 'git status'
-      }
-    }
+//     stage('Clean Build Artifacts') {
+//       steps {
+//         echo "Stage 1 Cleaning and Building Artifacts"
+//         sh 'rm -rf build/ dist/ *.egg-info/'
+//         sh 'git status'
+//       }
+//     }
     
-    stage('Build Image') {
-      steps {
-        echo "Stage 2 Building Image"
-        sh "ls -l /var/run/docker.sock"
-        // buildImage "auropro_project_3:${IMAGE_NAME}"
-        // dockerLogin()
-        // dockerPush "auropro_project_3:${IMAGE_NAME}"
-      }
-    }
+//     stage('Build Image') {
+//       steps {
+//         echo "Stage 2 Building Image"
+//         sh "ls -l /var/run/docker.sock"
+//         // buildImage "auropro_project_3:${IMAGE_NAME}"
+//         // dockerLogin()
+//         // dockerPush "auropro_project_3:${IMAGE_NAME}"
+//       }
+//     }
 
-    stage('Provision Server') {
-      environment {
-        AWS_ACCESS_KEY_ID = credentials('aws_access_key')
-        AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
-        TF_VAR_env_prefix = 'prod'
-        TF_VAR_region = "ap-south-1"
-        TERRAFORM_PRIVATE_KEY = credentials('terraform_private_key_id')
-        TERRAFORM_PUBLIC_KEY = credentials('terraform_public_key_id')
-      }
-      steps {
-        script {
-          dir('AuroPro_Project_3'){
-            echo "Stage 3 Provision Server"
-            sh "pwd"
-            sh "ls -l"
-            withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
-              sh "cp ${TFVARS_FILE} terraform.tfvars"
-            }
-            // Write private key to a file
-            sh "echo \"${TERRAFORM_PRIVATE_KEY}\" > private_key_id_rsa"
-            sh "chmod 644 terraform.tfvars"
-            sh "cat terraform.tfvars"
+//     stage('Provision Server') {
+//       environment {
+//         AWS_ACCESS_KEY_ID = credentials('aws_access_key')
+//         AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
+//         TF_VAR_env_prefix = 'prod'
+//         TF_VAR_region = "ap-south-1"
+//         TERRAFORM_PRIVATE_KEY = credentials('terraform_private_key_id')
+//         TERRAFORM_PUBLIC_KEY = credentials('terraform_public_key_id')
+//       }
+//       steps {
+//         script {
+//           dir('AuroPro_Project_3'){
+//             echo "Stage 3 Provision Server"
+//             sh "pwd"
+//             sh "ls -l"
+//             withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
+//               sh "cp ${TFVARS_FILE} terraform.tfvars"
+//             }
+//             // Write private key to a file
+//             sh "echo \"${TERRAFORM_PRIVATE_KEY}\" > private_key_id_rsa"
+//             sh "chmod 644 terraform.tfvars"
+//             sh "cat terraform.tfvars"
             
-            sh "ls -l private_key_id_rsa"
-            sh "cat private_key_id_rsa"
+//             sh "ls -l private_key_id_rsa"
+//             sh "cat private_key_id_rsa"
 
-            // Set permissions on private key
-            sh "chmod 600 private_key_id_rsa"
+//             // Set permissions on private key
+//             sh "chmod 600 private_key_id_rsa"
             
-            // Write public key to a file
-            sh "echo \"${TERRAFORM_PUBLIC_KEY}\" > public_key_id_rsa.pub"
-            sh "pwd"
-            sh "ls"
-            sh "ls -l public_key_id_rsa.pub"
-            sh "cat public_key_id_rsa.pub"
+//             // Write public key to a file
+//             sh "echo \"${TERRAFORM_PUBLIC_KEY}\" > public_key_id_rsa.pub"
+//             sh "pwd"
+//             sh "ls"
+//             sh "ls -l public_key_id_rsa.pub"
+//             sh "cat public_key_id_rsa.pub"
 
-            sh "terraform init"
-            sh "terraform plan"
-            sh "terraform validate"
-            sh "terraform apply -auto-approve"
-            EC2_PUBLIC_IP = sh(
-              script: "terraform output public_ip",
-              returnStdout:true
-            ).trim()
+//             sh "terraform init"
+//             sh "terraform plan"
+//             sh "terraform validate"
+//             sh "terraform apply -auto-approve"
+//             EC2_PUBLIC_IP = sh(
+//               script: "terraform output public_ip",
+//               returnStdout:true
+//             ).trim()
 
-            PEM_FILE = sh(
-            script: "terraform output private_key_pem",
-            returnStdout:true
-            ).trim()
+//             PEM_FILE = sh(
+//             script: "terraform output private_key_pem",
+//             returnStdout:true
+//             ).trim()
 
-            // Write private key content to a file
-            sh "echo '${PEM_FILE}' > private_key.pem"
+//             // Write private key content to a file
+//             sh "echo '${PEM_FILE}' > private_key.pem"
 
-            // Set permissions on private key
-            sh "chmod 600 private_key.pem"
+//             // Set permissions on private key
+//             sh "chmod 600 private_key.pem"
 
-          }
-          echo "Provisiong ##################################"
-          echo "${EC2_PUBLIC_IP}"
-          echo "${PEM_FILE}"
-          sh "pwd"
-          sh "ls"
-          sh "cat AuroPro_Project_3/private_key.pem"
-        }
-      }
-    }
+//           }
+//           echo "Provisiong ##################################"
+//           echo "${EC2_PUBLIC_IP}"
+//           echo "${PEM_FILE}"
+//           sh "pwd"
+//           sh "ls"
+//           sh "cat AuroPro_Project_3/private_key.pem"
+//         }
+//       }
+//     }
 
-  }
-} 
+//   }
+// } 
 
 
 // pipeline for Destroying Terraform Infrastructure
 
-/* pipeline {
+pipeline {
   agent any
   stages{
 
@@ -171,4 +171,4 @@ pipeline {
       }
     }
   }
-}  */
+} 
