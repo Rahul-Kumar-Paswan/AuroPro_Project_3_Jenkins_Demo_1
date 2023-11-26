@@ -18,7 +18,7 @@ module "my_instance" {
     source = "./modules/instances"
     ami_id = "${var.ami_id}"
     instance_name = "${var.instance_name}"
-    instance_type = "${instance_type}"
+    instance_type = "${var.instance_type}"
     subnet_id = module.my_vpc.public_subnet_id
     vpc_id = module.my_vpc.vpc_id
     env_prefix = "${var.env_prefix}"
