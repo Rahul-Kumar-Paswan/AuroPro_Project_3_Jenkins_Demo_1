@@ -80,9 +80,9 @@ pipeline {
         script {
           dir('AuroPro_Project_3'){
             echo "Stage 3 Provision Server"
-
+            
             withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
-              sh "cp ${TFVARS_FILE} terraform.tfvars"
+              sh 'cp $TFVARS_FILE terraform.tfvars'
             }
             
             sh "chmod 644 terraform.tfvars"
