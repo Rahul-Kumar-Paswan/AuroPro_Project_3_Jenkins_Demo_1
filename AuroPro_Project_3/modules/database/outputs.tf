@@ -9,3 +9,15 @@ output "db_subnet_group_name" {
 output "my_rds_sg_id" {
   value = aws_security_group.my_rds_sg.id
 }
+
+output "db_username" {
+  value = aws_db_instance.my_db_instance.username
+}
+
+output "db_password" {
+  value = aws_db_instance.my_db_instance.password
+}
+
+output "db_database" {
+  value = aws_db_instance.my_db_instance.db_name
+}
