@@ -1,5 +1,4 @@
 variable "env_prefix" {}
-
 variable "db_instance_identifier" {}
 variable "db_allocated_storage" {}
 variable "db_engine" {}

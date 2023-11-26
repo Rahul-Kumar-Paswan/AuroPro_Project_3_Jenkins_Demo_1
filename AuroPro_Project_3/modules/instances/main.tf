@@ -21,53 +21,9 @@ resource "aws_instance" "my_instance" {
 
   associate_public_ip_address = true
 
-  # user_data = file("entry-script.sh")
-  # user_data = file("${path.module}/entry-script.sh")
   user_data = file("entry-script.sh")
 
-
-  # provisioner "file" {
-  #   source = "/root/flask-jenkins-deploy/mydockercompose.yml"
-  #   destination = "/home/ec2-user/"
-  # }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "sudo yum update -y",
-  #     "sudo yum install docker -y",
-  #     "sudo service docker start",
-  #     "sudo usermod -a -G docker ec2-user",
-  #     "sudo chmod 666 /var/run/docker.sock",
-  #     "sudo service docker restart",
-  #     "sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose",
-  #     "sudo chmod +x /usr/local/bin/docker-compose",
-  #     "docker-compose --version"
-  #     # Additional commands for Docker setup or container deployment can be added here
-  #   ]
-  # }
-
-  # connection {
-  #   type        = "ssh"
-  #   user        = "ec2-user"                      # Replace with the username for your AMI
-  #   private_key = tls_private_key.ssh_private_key.private_key_pem  # Use the private key directly
-  #   host        = self.public_ip                 # You can use `self.public_dns` as well
-  # }
-
-  # provisioner "file" {
-  #   source = "AuroPro_Project_3/entry-script.sh"
-  #   destination = "/home/ec2-user/entry-script-on-ec2.sh"
-  # }
-
-  # provisioner "remote-exec" {
-  #   script = file("AuroPro_Project_3/entry-script.sh")
-  # }
-
 }
-
-# resource "aws_key_pair" "ssh_key" {
-#   key_name   = "my-key-pair"
-#   public_key = file("public_key.pub")  # Use the public key directly
-# }
 
 data "aws_ami" "latest-amazon-image" {
   most_recent = true

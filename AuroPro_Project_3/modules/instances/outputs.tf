@@ -14,16 +14,6 @@ output "my_security_group_id" {
   value = aws_security_group.my_security_group.id
 }
 
-# output "private_key_pem" {
-#   value       = aws_key_pair.ssh_key.key_name
-#   sensitive   = true
-#   description = "Private key for the SSH key pair"
-# }
-
-# output "private_key_pem" {
-#   value = aws_key_pair.ssh_key.public_key
-# }
-
 output "private_key_pem" {
   value = tls_private_key.ssh_private_key.private_key_pem
   sensitive = true

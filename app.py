@@ -18,12 +18,6 @@ mysql_port = int(os.getenv('MYSQL_PORT', 3306))
 
 # Get MySQL environment variables or use defaults this is for local
 
-# mysql_host = os.getenv('MYSQL_HOST', 'localhost')
-# mysql_user = os.getenv('MYSQL_USER', 'rahul')
-# mysql_password = os.getenv('MYSQL_PASSWORD', 'Rahul@123')
-# mysql_database = os.getenv('MYSQL_DATABASE', 'python_db')
-# mysql_port = int(os.getenv('MYSQL_PORT', 3306))
-
 print("MYSQL_HOST ", mysql_host)
 print("MYSQL_USER ", mysql_user)
 print("MYSQL_ROOT_PASSWORD ", mysql_password)
