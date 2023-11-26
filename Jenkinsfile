@@ -80,12 +80,13 @@ pipeline {
         script {
           dir('AuroPro_Project_3'){
             echo "Stage 3 Provision Server"
-            
+            sh 'touch terraform.tfvars'
+            sh "chmod 644 terraform.tfvars"
+
             withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
               sh 'cp $TFVARS_FILE terraform.tfvars'
             }
             
-            sh "chmod 644 terraform.tfvars"
             sh "cat terraform.tfvars"
 
             sh "terraform init"
