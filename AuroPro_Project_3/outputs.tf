@@ -33,6 +33,7 @@ output "db_username" {
 
 output "db_password" {
   value = module.my_database.db_password
+  sensitive = true
 }
 
 output "db_database" {
