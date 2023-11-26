@@ -157,6 +157,7 @@ pipeline {
 
           echo "Contents of the remote directory:"
           // Print contents of the remote directory
+          sh "ssh -o StrictHostKeyChecking=no -i ${privateKeyPath} ${ec2Instance} 'chmod +x /home/ec2-user/server-cmds.sh'"
           sh "ssh -o StrictHostKeyChecking=no -i ${privateKeyPath} ${ec2Instance} 'ls -l /home/ec2-user'"
 
           sh "ssh -o StrictHostKeyChecking=no -i ${privateKeyPath} ${ec2Instance} ${shellCmd}"
