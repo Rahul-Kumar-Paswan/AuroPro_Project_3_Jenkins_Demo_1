@@ -107,8 +107,8 @@ pipeline {
             // Set permissions on private key
             sh "chmod 600 private_key.pem"
 
-          }
           sh "cat terraform.tfvars"
+          }
           echo "Provisiong ##################################"
           echo "${EC2_PUBLIC_IP}"
           echo "${PEM_FILE}"
