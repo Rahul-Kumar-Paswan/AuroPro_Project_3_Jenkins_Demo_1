@@ -90,16 +90,8 @@ pipeline {
             // Use Jenkins environment variable for RDS endpoint
             RDS_ENDPOINT = env.RDS_ENDPOINT
 
-            // Use the provided RDS endpoint to set the corresponding environment variable in Terraform
-            sh "echo 'db_instance_endpoint = \"${RDS_ENDPOINT}\"' > terraform.tfvars"
-
-            // Use withCredentials to copy credentials to terraform.tfvars
             withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
-              sh 'cat $TFVARS_FILE >> terraform.tfvars'
-              // Extract values from terraform.tfvars and set Jenkins environment variables
-              DB_USERNAME = sh(script: 'grep -E "^db_username" terraform.tfvars | awk -F "=" \'{print $2}\' | tr -d "\'\""', returnStdout: true).trim()
-              DB_PASSWORD = sh(script: 'grep -E "^db_password" terraform.tfvars | awk -F "=" \'{print $2}\' | tr -d "\'\""', returnStdout: true).trim()
-              DB_NAME = sh(script: 'grep -E "^db_name" terraform.tfvars | awk -F "=" \'{print $2}\' | tr -d "\'\""', returnStdout: true).trim()
+              sh 'cp $TFVARS_FILE terraform.tfvars'
             }
             
             sh "chmod 644 terraform.tfvars"
@@ -119,6 +111,19 @@ pipeline {
             script: "terraform output private_key_pem",
             returnStdout:true
             ).trim()
+
+            // Use the provided RDS endpoint to set the corresponding environment variable in Terraform
+            sh "echo 'db_instance_endpoint = \"${RDS_ENDPOINT}\"' > terraform.tfvars"
+
+            // Inside the "Provision Server" stage
+            withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
+                sh "cat \"$TFVARS_FILE\" >> terraform.tfvars"
+                // Extract values from terraform.tfvars and set Jenkins environment variables
+                DB_USERNAME = sh(script: 'grep -E "^db_username" terraform.tfvars | awk -F "=" \'{print $2}\' | tr -d "\'\""', returnStdout: true).trim()
+                DB_PASSWORD = sh(script: 'grep -E "^db_password" terraform.tfvars | awk -F "=" \'{print $2}\' | tr -d "\'\""', returnStdout: true).trim()
+                DB_NAME = sh(script: 'grep -E "^db_name" terraform.tfvars | awk -F "=" \'{print $2}\' | tr -d "\'\""', returnStdout: true).trim()
+            }
+
 
             // Write private key content to a file
             sh "echo '${PEM_FILE}' > private_key.pem"
