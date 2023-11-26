@@ -93,9 +93,9 @@ pipeline {
 
             withCredentials([file(credentialsId: 'terraform_tfvars_secret', variable: 'TFVARS_FILE')]) {
               sh 'cp $TFVARS_FILE terraform.tfvars'
-              DB_USERNAME = sh(script: 'grep -E "^db_username" terraform.tfvars | awk -F "=" \'{print $2}\' | tr -d "\'\""', returnStdout: true).trim()
-              DB_PASSWORD = sh(script: 'grep -E "^db_password" terraform.tfvars | awk -F "=" \'{print $2}\' | tr -d "\'\""', returnStdout: true).trim()
-              DB_NAME = sh(script: 'grep -E "^db_name" terraform.tfvars | awk -F "=" \'{print $2}\' | tr -d "\'\""', returnStdout: true).trim()
+              DB_USERNAME = sh(script: 'grep -E "^db_username" terraform.tfvars | cut -d "=" -f 2 | tr -d "\'\""', returnStdout: true).trim()
+              DB_PASSWORD = sh(script: 'grep -E "^db_password" terraform.tfvars | cut -d "=" -f 2 | tr -d "\'\""', returnStdout: true).trim()
+              DB_NAME = sh(script: 'grep -E "^db_name" terraform.tfvars | cut -d "=" -f 2 | tr -d "\'\""', returnStdout: true).trim()
             }
             
             sh "chmod 644 terraform.tfvars"
