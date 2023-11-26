@@ -23,6 +23,10 @@ output "private_key_pem" {
   sensitive = true
 }
 
+# output "db_instance_endpoint" {
+#   value = module.my_db_instance.db_instance_endpoint
+# }
+
 output "db_instance_endpoint" {
-  value = module.my_db_instance.db_instance_endpoint
+  value = module.my_database.db_instance_endpoint
 }
