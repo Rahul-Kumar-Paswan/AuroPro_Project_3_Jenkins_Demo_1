@@ -124,7 +124,7 @@ pipeline {
 
     stage('Deploy with Docker Compose and Groovy') {
       environment {
-        IMAGE_NAME_1 = "rahulkumarpaswan/auropro_project_3:${IMAGE_NAME}"
+        IMAGE_NAME_1 = "rahulkumarpaswan/auropro_project_3:${IMAGE_NAME}".toLowerCase()
         RDS_DB_ENDPOINT = "${RDS_ENDPOINT}"
         RDS_DB_USERNAME = "${DB_USERNAME}"
         RDS_DB_PASSWORD = "${DB_PASSWORD}"
