@@ -78,7 +78,7 @@ pipeline {
       }
       steps {
         script {
-          // def result
+          def result
           dir('AuroPro_Project_3'){
             echo "Stage 3 Provision Server"
             sh 'touch terraform.tfvars'
@@ -123,7 +123,7 @@ pipeline {
           echo "Provisiong ##################################"
           echo "${EC2_PUBLIC_IP}"
           echo "${PEM_FILE}"
-          // echo "${result}"
+          echo "${result}"
           echo "${DB_USERNAME}"
           echo "${DB_PASSWORD}"
           echo "${DB_NAME}"
