@@ -78,7 +78,6 @@ pipeline {
       }
       steps {
         script {
-          // def result
           dir('AuroPro_Project_3'){
             echo "Stage 3 Provision Server"
             sh 'touch terraform.tfvars'
@@ -105,20 +104,12 @@ pipeline {
             // Write private key content to a file
             sh "echo '${PEM_FILE}' > private_key.pem"
             echo "${RDS_ENDPOINT}"
-            def db_instance_string1 = "${RDS_ENDPOINT}"
-            echo "${db_instance_string1}"
-            def db_instance_string = RDS_ENDPOINT
-            echo "${db_instance_string}"
-            def parts = db_instance_string.split(":")
-                    
-            // Convert the array slice to a list and join the list
-            def result = parts[0..-2].toList().join(':')
-
+            
             // Set permissions on private key
             sh "chmod 600 private_key.pem"
 
-          sh "cat terraform.tfvars"
-          echo "${result}"
+            sh "cat terraform.tfvars"
+            echo "${result}"
           }
           echo "Provisiong ##################################"
           echo "${EC2_PUBLIC_IP}"
@@ -136,7 +127,7 @@ pipeline {
     stage('Deploy with Docker Compose and Groovy') {
       environment {
         IMAGE_NAME_1 = "rahulkumarpaswan/auropro_project_3:${IMAGE_NAME}"
-        RDS_DB_ENDPOINT = "${result}"
+        RDS_DB_ENDPOINT = "${RDS_ENDPOINT}"
         RDS_DB_USERNAME = "${DB_USERNAME}"
         RDS_DB_PASSWORD = "${DB_PASSWORD}"
         RDS_DB_NAME = "${DB_NAME}"
@@ -144,6 +135,14 @@ pipeline {
       steps {
         script {
           echo "Deploy to EC2 ........" 
+          echo "${RDS_DB_ENDPOINT}"
+          def db_instance_string = RDS_DB_ENDPOINT
+          echo "${db_instance_string}"
+          def parts = db_instance_string.split(":")
+          // Convert the array slice to a list and join the list
+          def result = parts[0..-2].toList().join(':')
+          echo "${result}"
+
           echo "${IMAGE_NAME_1}"
           echo "${RDS_DB_ENDPOINT}"
           echo "${RDS_DB_USERNAME}"
