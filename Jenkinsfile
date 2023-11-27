@@ -75,10 +75,10 @@ pipeline {
       environment {
         AWS_ACCESS_KEY_ID = credentials('aws_access_key')
         AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
-        def result
       }
       steps {
         script {
+          def result
           dir('AuroPro_Project_3'){
             echo "Stage 3 Provision Server"
             sh 'touch terraform.tfvars'
