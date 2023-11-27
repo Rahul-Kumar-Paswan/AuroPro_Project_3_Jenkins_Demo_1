@@ -65,9 +65,9 @@ pipeline {
       steps {
         echo "Stage 2 Building Image"
         sh "ls -l /var/run/docker.sock"
-        buildImage "auropro_project_3:${IMAGE_NAME}"
-        dockerLogin()
-        dockerPush "auropro_project_3:${IMAGE_NAME}"
+        // buildImage "auropro_project_3:${IMAGE_NAME}"
+        // dockerLogin()
+        // dockerPush "auropro_project_3:${IMAGE_NAME}"
       }
     }
 
@@ -78,7 +78,7 @@ pipeline {
       }
       steps {
         script {
-          def result
+          // def result
           dir('AuroPro_Project_3'){
             echo "Stage 3 Provision Server"
             sh 'touch terraform.tfvars'
@@ -112,7 +112,7 @@ pipeline {
             def parts = db_instance_string.split(":")
                     
             // Convert the array slice to a list and join the list
-            result = parts[0..-2].toList().join(':')
+            def result = parts[0..-2].toList().join(':')
 
             // Set permissions on private key
             sh "chmod 600 private_key.pem"
