@@ -78,7 +78,7 @@ pipeline {
       }
       steps {
         script {
-          def result
+          // def result
           dir('AuroPro_Project_3'){
             echo "Stage 3 Provision Server"
             sh 'touch terraform.tfvars'
