@@ -136,7 +136,7 @@ pipeline {
           def parts = RDS_ENDPOINT.split(":")
           // Convert the array slice to a list and join the list
           // def RDS_DB_ENDPOINT = parts[0..-2].toList().join(':')
-          def RDS_DB_ENDPOINT = parts[0]
+          def RDS_DB_ENDPOINT = parts[0]+'"'
 
           echo "${IMAGE_NAME_1}"
           echo "${RDS_DB_ENDPOINT}"
