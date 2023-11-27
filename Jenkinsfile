@@ -125,7 +125,6 @@ pipeline {
     stage('Deploy with Docker Compose and Groovy') {
       environment {
         IMAGE_NAME_1 = "rahulkumarpaswan/auropro_project_3:${IMAGE_NAME}"
-        // RESULT = "${RDS_ENDPOINT}"
         RDS_DB_USERNAME = "${DB_USERNAME}"
         RDS_DB_PASSWORD = "${DB_PASSWORD}"
         RDS_DB_NAME = "${DB_NAME}"
@@ -134,12 +133,10 @@ pipeline {
         script {
           echo "Deploy to EC2 ........" 
           echo "${RDS_ENDPOINT}"
-          // def RDS_DB_ENDPOINT = RDS_ENDPOINT
-          echo "${RDS_ENDPOINT}"
           def parts = RDS_ENDPOINT.split(":")
           // Convert the array slice to a list and join the list
-          def RDS_DB_ENDPOINT = parts[0..-2].toList().join(':')
-          echo "${RDS_DB_ENDPOINT}"
+          // def RDS_DB_ENDPOINT = parts[0..-2].toList().join(':')
+          def RDS_DB_ENDPOINT = parts[0]
 
           echo "${IMAGE_NAME_1}"
           echo "${RDS_DB_ENDPOINT}"
