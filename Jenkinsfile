@@ -103,6 +103,12 @@ pipeline {
 
             // Write private key content to a file
             sh "echo '${PEM_FILE}' > private_key.pem"
+            echo "${RDS_ENDPOINT}"
+            def db_instance_string = "${RDS_ENDPOINT}"
+            def parts = db_instance_string.split(":")
+                    
+            // Convert the array slice to a list and join the list
+            def result = parts[0..-2].toList().join(':')
 
             // Set permissions on private key
             sh "chmod 600 private_key.pem"
@@ -112,7 +118,7 @@ pipeline {
           echo "Provisiong ##################################"
           echo "${EC2_PUBLIC_IP}"
           echo "${PEM_FILE}"
-          echo "${RDS_ENDPOINT}"
+          echo "${result}"
           echo "${DB_USERNAME}"
           echo "${DB_PASSWORD}"
           echo "${DB_NAME}"
@@ -125,7 +131,7 @@ pipeline {
     stage('Deploy with Docker Compose and Groovy') {
       environment {
         IMAGE_NAME_1 = "rahulkumarpaswan/auropro_project_3:${IMAGE_NAME}"
-        RDS_DB_ENDPOINT = "${RDS_ENDPOINT}"
+        RDS_DB_ENDPOINT = "${result}"
         RDS_DB_USERNAME = "${DB_USERNAME}"
         RDS_DB_PASSWORD = "${DB_PASSWORD}"
         RDS_DB_NAME = "${DB_NAME}"
@@ -150,15 +156,24 @@ pipeline {
           echo "waiting for EC2 server to initialize"
           sleep(time: 90, unit: "SECONDS")
 
-          def shellCmd = "bash ./server-cmds.sh RDS_ENDPOINT=${RDS_DB_ENDPOINT} DB_USERNAME=${RDS_DB_USERNAME} DB_PASSWORD=${RDS_DB_PASSWORD} DB_NAME=${RDS_DB_NAME} IMAGE_NAME=${IMAGE_NAME_1}"
+          def shellCmd = "bash ./server-cmds.sh RDS_ENDPOINT=${RDS_DB_ENDPOINT} DB_USERNAME=${RDS_DB_USERNAME} DB_PASSWORD='${RDS_DB_PASSWORD}' DB_NAME=${RDS_DB_NAME} IMAGE_NAME=${IMAGE_NAME_1}"
+
+          sh "chmod +x server-cmds.sh"
           sh "scp -o StrictHostKeyChecking=no -i ${privateKeyPath} server-cmds.sh ${ec2Instance}:/home/ec2-user"
           // sh "scp -o StrictHostKeyChecking=no -i ${privateKeyPath} docker-compose.yaml ${ec2Instance}:/home/ec2-user"
 
           echo "Contents of the remote directory:"
           // Print contents of the remote directory
+          sh "ssh -o StrictHostKeyChecking=no -i ${privateKeyPath} ${ec2Instance} 'chmod +x /home/ec2-user/server-cmds.sh'"
           sh "ssh -o StrictHostKeyChecking=no -i ${privateKeyPath} ${ec2Instance} 'ls -l /home/ec2-user'"
 
           sh "ssh -o StrictHostKeyChecking=no -i ${privateKeyPath} ${ec2Instance} ${shellCmd}"
+          // sh "ssh -o StrictHostKeyChecking=no -i ${privateKeyPath} ${ec2Instance} docker run -p 5000:5000 \
+          //   -e MYSQL_HOST=${RDS_DB_ENDPOINT} \
+          //   -e MYSQL_USER=${RDS_DB_USERNAME} \
+          //   -e MYSQL_ROOT_PASSWORD=${RDS_DB_PASSWORD} \
+          //   -e MYSQL_DATABASE=${RDS_DB_NAME} \
+          //   ${IMAGE_NAME_1}"
 
           // deployApp "auropro_project_3:${IMAGE_NAME}"
         }
@@ -198,4 +213,4 @@ pipeline {
       }
     }
   }
-} */  
+} */ 
