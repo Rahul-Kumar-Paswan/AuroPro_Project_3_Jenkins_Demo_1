@@ -75,6 +75,7 @@ pipeline {
       environment {
         AWS_ACCESS_KEY_ID = credentials('aws_access_key')
         AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
+        def result
       }
       steps {
         script {
@@ -155,7 +156,7 @@ pipeline {
           sh "pwd"
           sh "ls"
           echo "waiting for EC2 server to initialize"
-          sleep(time: 90, unit: "SECONDS")
+          // sleep(time: 90, unit: "SECONDS")
 
           def shellCmd = "bash ./server-cmds.sh RDS_ENDPOINT=${RDS_DB_ENDPOINT} DB_USERNAME=${RDS_DB_USERNAME} DB_PASSWORD='${RDS_DB_PASSWORD}' DB_NAME=${RDS_DB_NAME} IMAGE_NAME=${IMAGE_NAME_1}"
 
