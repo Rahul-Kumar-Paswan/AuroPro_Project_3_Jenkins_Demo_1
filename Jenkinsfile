@@ -158,7 +158,7 @@ pipeline {
           echo "waiting for EC2 server to initialize"
           // sleep(time: 90, unit: "SECONDS")
 
-          def shellCmd = "bash ./server-cmds.sh RDS_ENDPOINT=${RDS_DB_ENDPOINT} DB_USERNAME=${RDS_DB_USERNAME} DB_PASSWORD='${RDS_DB_PASSWORD}' DB_NAME=${RDS_DB_NAME} IMAGE_NAME=${IMAGE_NAME_1}"
+          def shellCmd = "bash ./server-cmds.sh RDS_ENDPOINT=${result} DB_USERNAME=${RDS_DB_USERNAME} DB_PASSWORD='${RDS_DB_PASSWORD}' DB_NAME=${RDS_DB_NAME} IMAGE_NAME=${IMAGE_NAME_1}"
 
           sh "chmod +x server-cmds.sh"
           sh "scp -o StrictHostKeyChecking=no -i ${privateKeyPath} server-cmds.sh ${ec2Instance}:/home/ec2-user"
