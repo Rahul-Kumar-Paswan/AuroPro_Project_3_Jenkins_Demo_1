@@ -125,7 +125,7 @@ pipeline {
     stage('Deploy with Docker Compose and Groovy') {
       environment {
         IMAGE_NAME_1 = "rahulkumarpaswan/auropro_project_3:${IMAGE_NAME}"
-        RDS_DB_ENDPOINT = "${RDS_ENDPOINT}"
+        // RESULT = "${RDS_ENDPOINT}"
         RDS_DB_USERNAME = "${DB_USERNAME}"
         RDS_DB_PASSWORD = "${DB_PASSWORD}"
         RDS_DB_NAME = "${DB_NAME}"
@@ -133,13 +133,13 @@ pipeline {
       steps {
         script {
           echo "Deploy to EC2 ........" 
-          echo "${RDS_DB_ENDPOINT}"
-          def db_instance_string = RDS_DB_ENDPOINT
-          echo "${db_instance_string}"
-          def parts = db_instance_string.split(":")
+          echo "${RDS_ENDPOINT}"
+          // def RDS_DB_ENDPOINT = RDS_ENDPOINT
+          echo "${RDS_ENDPOINT}"
+          def parts = RDS_ENDPOINT.split(":")
           // Convert the array slice to a list and join the list
-          def result = parts[0..-2].toList().join(':')
-          echo "${result}"
+          def RDS_DB_ENDPOINT = parts[0..-2].toList().join(':')
+          echo "${RDS_DB_ENDPOINT}"
 
           echo "${IMAGE_NAME_1}"
           echo "${RDS_DB_ENDPOINT}"
@@ -158,7 +158,7 @@ pipeline {
           echo "waiting for EC2 server to initialize"
           // sleep(time: 90, unit: "SECONDS")
 
-          def shellCmd = "bash ./server-cmds.sh RDS_ENDPOINT=${result} DB_USERNAME=${RDS_DB_USERNAME} DB_PASSWORD='${RDS_DB_PASSWORD}' DB_NAME=${RDS_DB_NAME} IMAGE_NAME=${IMAGE_NAME_1}"
+          def shellCmd = "bash ./server-cmds.sh RDS_ENDPOINT=${RDS_DB_ENDPOINT} DB_USERNAME=${RDS_DB_USERNAME} DB_PASSWORD='${RDS_DB_PASSWORD}' DB_NAME=${RDS_DB_NAME} IMAGE_NAME=${IMAGE_NAME_1}"
 
           sh "chmod +x server-cmds.sh"
           sh "scp -o StrictHostKeyChecking=no -i ${privateKeyPath} server-cmds.sh ${ec2Instance}:/home/ec2-user"
