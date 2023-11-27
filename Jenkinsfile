@@ -109,12 +109,10 @@ pipeline {
             sh "chmod 600 private_key.pem"
 
             sh "cat terraform.tfvars"
-            echo "${result}"
           }
           echo "Provisiong ##################################"
           echo "${EC2_PUBLIC_IP}"
           echo "${PEM_FILE}"
-          echo "${result}"
           echo "${DB_USERNAME}"
           echo "${DB_PASSWORD}"
           echo "${DB_NAME}"
