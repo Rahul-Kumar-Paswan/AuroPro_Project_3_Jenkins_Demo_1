@@ -105,11 +105,14 @@ pipeline {
             // Write private key content to a file
             sh "echo '${PEM_FILE}' > private_key.pem"
             echo "${RDS_ENDPOINT}"
-            def db_instance_string = "${RDS_ENDPOINT}"
+            def db_instance_string1 = "${RDS_ENDPOINT}"
+            echo "${db_instance_string1}"
+            def db_instance_string = RDS_ENDPOINT
+            echo "${db_instance_string}"
             def parts = db_instance_string.split(":")
                     
             // Convert the array slice to a list and join the list
-            def result = parts[0..-2].toList().join(':')
+            result = parts[0..-2].toList().join(':')
 
             // Set permissions on private key
             sh "chmod 600 private_key.pem"
